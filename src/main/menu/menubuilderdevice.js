@@ -1,6 +1,20 @@
 import { FeatureIdentifier } from '../feature/featureidentifier';
 import { RazerDeviceType } from '../device/razerdevicetype';
 
+function getBrightnessSubmenuItems(setBrightnessFn, application) {
+  const items = [];
+  for (let i = 0; i <= 100; i += 5) {
+    items.push({
+      label: i + '%',
+      click() {
+        setBrightnessFn(i);
+        application.refreshTray();
+      },
+    });
+  }
+  return items;
+}
+
 export function getDeviceMenuFor(application, razerDevice) {
   let deviceMenu = [
     { type: 'separator' },
@@ -103,11 +117,6 @@ function getFeatureBreath(application, device, feature) {
 }
 
 function getFeatureBrightness(application, device, feature) {
-  const updateBrightness = (brightness) => {
-    device.setBrightness(brightness);
-    application.refreshTray();
-  };
-
   return {
     label: 'Brightness',
     submenu: [
@@ -115,18 +124,7 @@ function getFeatureBrightness(application, device, feature) {
         label: `Brightness: ${device.getBrightness()}%`,
       },
       { type: 'separator' },
-      {
-        label: 'Set to 0%',
-        click() {
-          updateBrightness(0);
-        },
-      },
-      {
-        label: 'Set to 100%',
-        click() {
-          updateBrightness(100);
-        },
-      },
+      ...getBrightnessSubmenuItems((v) => device.setBrightness(v), application),
     ],
   };
 }
@@ -429,91 +427,26 @@ function getFeatureMouseBrightness(application, device, feature) {
   const submenu = [
     feature.configuration.enabledMatrix ? {
       label: 'All (' + device.getBrightnessMatrix() + '%)',
-      submenu: [
-        {
-          label: '0%', click() {
-            device.setBrightnessMatrix(0);
-            application.refreshTray();
-          },
-        },
-        {
-          label: '100%', click() {
-            device.setBrightnessMatrix(100);
-            application.refreshTray();
-          },
-        },
-      ],
+      submenu: getBrightnessSubmenuItems((v) => device.setBrightnessMatrix(v), application),
     } : null,
     feature.configuration.enabledLogo ? {
       label: 'Logo (' + device.getBrightnessLogo() + '%)',
-      submenu: [
-        {
-          label: '0%', click() {
-            device.setBrightnessLogo(0);
-            application.refreshTray();
-          },
-        },
-        {
-          label: '100%', click() {
-            device.setBrightnessLogo(100);
-            application.refreshTray();
-          },
-        },
-      ],
+      submenu: getBrightnessSubmenuItems((v) => device.setBrightnessLogo(v), application),
     } : null,
     feature.configuration.enabledScroll ?
       {
         label: 'Scroll (' + device.getBrightnessScroll() + '%)',
-        submenu: [
-          {
-            label: '0%', click() {
-              device.setBrightnessScroll(0);
-              application.refreshTray();
-            },
-          },
-          {
-            label: '100%', click() {
-              device.setBrightnessScroll(100);
-              application.refreshTray();
-            },
-          },
-        ],
+        submenu: getBrightnessSubmenuItems((v) => device.setBrightnessScroll(v), application),
       } : null,
     feature.configuration.enabledLeft ?
       {
         label: 'Left (' + device.getBrightnessLeft() + '%)',
-        submenu: [
-          {
-            label: '0%', click() {
-              device.setBrightnessLeft(0);
-              application.refreshTray();
-            },
-          },
-          {
-            label: '100%', click() {
-              device.setBrightnessLeft(100);
-              application.refreshTray();
-            },
-          },
-        ],
+        submenu: getBrightnessSubmenuItems((v) => device.setBrightnessLeft(v), application),
       } : null,
     feature.configuration.enabledRight ?
       {
         label: 'Right (' + device.getBrightnessRight() + '%)',
-        submenu: [
-          {
-            label: '0%', click() {
-              device.setBrightnessRight(0);
-              application.refreshTray();
-            },
-          },
-          {
-            label: '100%', click() {
-              device.setBrightnessRight(100);
-              application.refreshTray();
-            },
-          },
-        ],
+        submenu: getBrightnessSubmenuItems((v) => device.setBrightnessRight(v), application),
       } : null,
   ];
 

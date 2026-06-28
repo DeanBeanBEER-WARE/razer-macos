@@ -59,7 +59,7 @@
   "build": {
     "appId": "com.electron.razer-macos",
     "productName": "Razer macOS",
-    "nodeGypRebuild": true,
+    "nodeGypRebuild": false,
     "directories": {
       "output": "dist",
       "buildResources": "resources"
